@@ -110,10 +110,24 @@ my $app = sub {
         #warn($session_id . " ; ". $skill_id . " ; ". $user_id . ";\n");
 
     } else {
-         return [
+        my $session_id = $jstring->{'session'}->{'session_id'};
+        my $skill_id = $jstring->{'session'}->{'skill_id'};
+        my $user_id = $jstring->{'session'}->{'user_id'};
+
+        my $keyword = $jstring->{'request'}->{'nlu'}->{'tokens'}->[1];
+        warn( $user_id );
+        $responsepattern->{'session'}->{'session_id'} = $session_id;
+        $responsepattern->{'session'}->{'skill_id'} = $skill_id;
+        $responsepattern->{'session'}->{'user_id'} = $user_id;
+        
+        $responsepattern->{'response'}->{'text'} = "В доступе отказано!";
+        $responsepattern->{'response'}->{'tts'} = "В доступе отказано";
+
+        my $send = encode_json($responsepattern);
+        return [
              '200',
              [ 'Content-Type' => 'text/html' ],
-             [ "ok" ],
+             [ $send ],
         ];
     }
 };
